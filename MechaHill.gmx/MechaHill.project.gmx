@@ -40,6 +40,7 @@
   </objects>
   <rooms name="rooms">
     <room>rooms\battle_proto</room>
+    <room>rooms\battle_proto_2</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>
