@@ -26,7 +26,6 @@
           <argument>
             <kind>1</kind>
             <string>fire_delay = 50;
-missile_speed = 5;
 last_fired_at = 0;
 alarm[0] = fire_delay;
 </string>
@@ -51,11 +50,8 @@ alarm[0] = fire_delay;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>player = instance_find(obj_player_human,0);
-alarm[0] = fire_delay;
+            <string>alarm[0] = fire_delay;
 missile = instance_create(x,y,obj_enemy_missile);
-missile.speed = missile_speed;
-missile.direction = point_direction(x,y,player.x,player.y);
 </string>
           </argument>
         </arguments>

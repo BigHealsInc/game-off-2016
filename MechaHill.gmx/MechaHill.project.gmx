@@ -32,14 +32,13 @@
     <object>objects\obj_enemy_machine_gun</object>
     <object>objects\obj_enemy_missile</object>
     <object>objects\obj_enemy_machine_gun_shot</object>
-    <object>objects\obj_player_human</object>
+    <object>objects\obj_player_first_person</object>
     <object>objects\obj_player_machine_gun_shot</object>
     <object>objects\obj_player_energy_grenade</object>
     <object>objects\obj_gen_projectile</object>
     <object>objects\obj_gen_enemy_part</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\battle_proto</room>
     <room>rooms\battle_proto_2</room>
   </rooms>
   <help>
