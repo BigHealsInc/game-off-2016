@@ -2,7 +2,7 @@
 <object>
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
-  <visible>0</visible>
+  <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
@@ -29,6 +29,7 @@
 energy_regen = 20;
 gun_energy_drain = 5;
 grenade_energy_drain = 80;
+bullet_spacing = 50;
 </string>
           </argument>
         </arguments>
@@ -54,7 +55,7 @@ grenade_energy_drain = 80;
             <string>FIRE_GUN = false;
 FIRE_GRENADE = false;
 
-if (mouse_check_button(mb_left)) {
+if (mouse_check_button(mb_left) &amp;&amp; energy &gt;= gun_energy_drain) {
     FIRE_GUN = true;
 }
 
@@ -62,13 +63,26 @@ if (mouse_check_button(mb_right)) {
     FIRE_GRENADE = true;
 }
 
-if (FIRE_GUN &amp;&amp; energy &gt;= gun_energy_drain) {
-    shot = instance_create(x, y, obj_player_machine_gun_shot);
-    shot.direction = point_direction(x,y,mouse_x,mouse_y);
-    shot.speed = 35;
-    shot.dest_x = mouse_x;
-    shot.dest_y = mouse_y;
+if (FIRE_GUN) {
     energy -= gun_energy_drain;
+    
+    // if this point intersects with a missile destroy it
+    if (collision_point(mouse_x, mouse_y,obj_enemy_missile,true,true)) {
+        // Hit missile
+        with(instance_nearest(mouse_x,mouse_y, obj_enemy_missile)) {
+            instance_destroy();
+        }
+        effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
+    } else if (collision_point(mouse_x, mouse_y,obj_gen_enemy_part,true,true)) {
+        // Hit enemy part
+        with(instance_nearest(mouse_x,mouse_y, obj_enemy_missile)) {
+            // deal damage
+        }
+        effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
+    } else {
+        // Miss
+        effect_create_above(ef_smoke, mouse_x, mouse_y, 0.1, c_ltgray);
+    }
 }
 
 if (FIRE_GRENADE &amp;&amp; energy &gt;= grenade_energy_drain) {
@@ -81,6 +95,61 @@ if (FIRE_GRENADE &amp;&amp; energy &gt;= grenade_energy_drain) {
 }
 
 energy += energy_regen;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (FIRE_GUN) {  
+    // Draw firing - move to draw function
+    // Get random value for shift
+    bullet_vary = random_range(0.7,1);
+    varied_bullet_spacing = bullet_spacing * bullet_vary;
+    // Get distance between current obj position and mouse
+    firing_distance = point_distance(x,y,mouse_x,mouse_y);
+    firing_angle = point_direction(x,y,mouse_x,mouse_y)+90;
+    
+    show_debug_message("firing_distance: " + string(firing_distance));
+    show_debug_message("firing_angle: " + string(firing_angle));
+    // Calculate number of bullets to draw
+    num_bullets = firing_distance / varied_bullet_spacing;
+    show_debug_message("FIRE");
+    // Draw circles between here and there getting smaller the greater the distance
+    for (i = 1; i &lt;= num_bullets; i++) {
+
+        bullet_x = 0;
+        bullet_y = 0;
+        
+        // Calculate offsets for this iteration
+        bullet_distance = i * varied_bullet_spacing;
+        bullet_x = x + sin(degtorad(firing_angle))*bullet_distance;
+        bullet_y = y + cos(degtorad(firing_angle))*bullet_distance;
+        
+        show_debug_message("bullet_x: " + string(bullet_x));
+        show_debug_message("bullet_y: " + string(bullet_y));
+        
+        draw_circle_color(bullet_x, bullet_y, 8, c_yellow, c_yellow, false);
+    }
+    
+    // Use the random value to shift this back and forth to simulate firing
+}
 </string>
           </argument>
         </arguments>
