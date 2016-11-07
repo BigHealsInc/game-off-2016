@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>hit_radius = 40;
+            <string>hit_radius = 30;
 </string>
           </argument>
         </arguments>
@@ -76,14 +76,24 @@ if (dest_distance &lt;= hit_radius) {
           <argument>
             <kind>1</kind>
             <string>dest_distance = abs(point_distance(x,y,dest_x,dest_y));
-//show_debug_message("Bullet is at x,y " + string(x) + "," + string(y));
-// show_debug_message("Desired hit target from mouse is " + string(dest_x) + "," + string(dest_y));
 if (dest_distance &lt;= hit_radius) {
-//    show_debug_message("HIT");
-    effect_create_above(ef_explosion, x, y, 2, c_ltgray);
-    instance_destroy();    
+    player = instance_find(obj_player_first_person,0);
+    if (collision_point(x, y,obj_enemy_core_armor,true,true)) {
+        // Hit Core armor
+        enemy_core_armor = instance_nearest(x,y, obj_enemy_core_armor)
+        enemy_core_armor.part_health -= player.grenade_damage;
+        //effect_create_above(ef_explosion, x, y, 1, c_ltgray);
+    } else if (collision_point(x, y,obj_enemy_core,true,true)) {
+        // Hit Core
+        enemy_core = instance_nearest(x,y, obj_enemy_core)
+        enemy_core.part_health -= player.grenade_damage;
+        effect_create_above(ef_explosion, x, y, 1, c_ltgray);
+    } else {
+        other.part_health -= player.grenade_damage;
+        effect_create_above(ef_explosion, x, y, 2, c_ltgray);
+    }    
+    instance_destroy();
 }
-// show_debug_message("MISS! With a dest_distance of " + string(dest_distance));
 </string>
           </argument>
         </arguments>

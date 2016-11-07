@@ -3,7 +3,7 @@
   <spriteName>spr_enemy_missile_launcher_proto</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>2</depth>
+  <depth>4</depth>
   <persistent>0</persistent>
   <parentName>obj_gen_enemy_part</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -25,9 +25,10 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>fire_delay = 50;
+            <string>fire_delay = 60;
 last_fired_at = 0;
 alarm[0] = fire_delay;
+part_health = 500;
 </string>
           </argument>
         </arguments>

@@ -25,11 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>energy = 100;
-energy_regen = 20;
-gun_energy_drain = 5;
-grenade_energy_drain = 80;
+            <string>max_energy = 1000;
+energy = 1000;
+energy_regen = 5;
+gun_energy_drain = 20;
+grenade_energy_drain = 300;
 bullet_spacing = 50;
+bullet_damage = 5;
+grenade_damage = 100;
 </string>
           </argument>
         </arguments>
@@ -59,7 +62,7 @@ if (mouse_check_button(mb_left) &amp;&amp; energy &gt;= gun_energy_drain) {
     FIRE_GUN = true;
 }
 
-if (mouse_check_button(mb_right)) {
+if (mouse_check_button_released(mb_right)) {
     FIRE_GRENADE = true;
 }
 
@@ -73,14 +76,22 @@ if (FIRE_GUN) {
             instance_destroy();
         }
         effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
+    } else if (collision_point(mouse_x, mouse_y,obj_enemy_core_armor,true,true)) {
+        // Hit Core armor
+        enemy_core_armor = instance_nearest(mouse_x,mouse_y, obj_enemy_core_armor)
+        enemy_core_armor.part_health -= bullet_damage;
+        //effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
+    } else if (collision_point(mouse_x, mouse_y,obj_enemy_core,true,true)) {
+        // Hit Core
+        enemy_core = instance_nearest(mouse_x,mouse_y, obj_enemy_core)
+        enemy_core.part_health -= bullet_damage;
+        effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
     } else if (collision_point(mouse_x, mouse_y,obj_gen_enemy_part,true,true)) {
         // Hit enemy part
-        with(instance_nearest(mouse_x,mouse_y, obj_enemy_missile)) {
-            // deal damage
-        }
+        enemy_part = instance_nearest(mouse_x,mouse_y, obj_gen_enemy_part)
+        enemy_part.part_health -= bullet_damage;
         effect_create_above(ef_explosion, mouse_x, mouse_y, 1, c_ltgray);
     } else {
-        // Miss
         effect_create_above(ef_smoke, mouse_x, mouse_y, 0.1, c_ltgray);
     }
 }
@@ -95,6 +106,7 @@ if (FIRE_GRENADE &amp;&amp; energy &gt;= grenade_energy_drain) {
 }
 
 energy += energy_regen;
+if (energy &gt;= max_energy) {energy = max_energy;}
 </string>
           </argument>
         </arguments>
@@ -126,11 +138,11 @@ energy += energy_regen;
     firing_distance = point_distance(x,y,mouse_x,mouse_y);
     firing_angle = point_direction(x,y,mouse_x,mouse_y)+90;
     
-    show_debug_message("firing_distance: " + string(firing_distance));
-    show_debug_message("firing_angle: " + string(firing_angle));
+    //show_debug_message("firing_distance: " + string(firing_distance));
+    //show_debug_message("firing_angle: " + string(firing_angle));
     // Calculate number of bullets to draw
     num_bullets = firing_distance / varied_bullet_spacing;
-    show_debug_message("FIRE");
+    //show_debug_message("FIRE");
     // Draw circles between here and there getting smaller the greater the distance
     for (i = 1; i &lt;= num_bullets; i++) {
 
@@ -142,14 +154,27 @@ energy += energy_regen;
         bullet_x = x + sin(degtorad(firing_angle))*bullet_distance;
         bullet_y = y + cos(degtorad(firing_angle))*bullet_distance;
         
-        show_debug_message("bullet_x: " + string(bullet_x));
-        show_debug_message("bullet_y: " + string(bullet_y));
+        //show_debug_message("bullet_x: " + string(bullet_x));
+        //show_debug_message("bullet_y: " + string(bullet_y));
         
         draw_circle_color(bullet_x, bullet_y, 8, c_yellow, c_yellow, false);
     }
-    
-    // Use the random value to shift this back and forth to simulate firing
 }
+
+// Draw remaining gun energy
+barWidth = 500;
+barHeight = 100;
+draw_set_color(c_blue);
+if (energy &lt;= 0) {
+    percent_energy = 0
+} else { 
+    percent_energy = energy/max_energy;
+}
+
+draw_rectangle(x - barWidth / 2, y, x - barWidth / 2 + barWidth * percent_energy, y + barHeight, false);
+draw_set_color(c_black);
+draw_rectangle(x - barWidth / 2, y, x + barWidth / 2, y + barHeight, true);
+
 </string>
           </argument>
         </arguments>

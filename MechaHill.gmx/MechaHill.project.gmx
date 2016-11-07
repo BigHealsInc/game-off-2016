@@ -13,12 +13,14 @@
     <sprite>sprites\spr_enemy_head_proto</sprite>
     <sprite>sprites\spr_enemy_missile_launcher_proto</sprite>
     <sprite>sprites\spr_enemy_machine_gun_proto</sprite>
-    <sprite>sprites\spr_enemy_missile_proto</sprite>
     <sprite>sprites\spr_enemy_machine_gun_shot_proto</sprite>
     <sprite>sprites\spr_player_machine_gun_shot_proto</sprite>
     <sprite>sprites\spr_player_energy_grenade_proto</sprite>
     <sprite>sprites\spr_player_roll_proto</sprite>
     <sprite>sprites\spr_crosshair_proto</sprite>
+    <sprite>sprites\spr_enemy_missile_proto_smooth</sprite>
+    <sprite>sprites\spr_enemy_core_proto</sprite>
+    <sprite>sprites\spr_core_armor_proto</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_battle_proto</background>
@@ -39,6 +41,8 @@
     <object>objects\obj_gen_projectile</object>
     <object>objects\obj_gen_enemy_part</object>
     <object>objects\obj_game_manager</object>
+    <object>objects\obj_enemy_core</object>
+    <object>objects\obj_enemy_core_armor</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\battle_proto_2</room>
